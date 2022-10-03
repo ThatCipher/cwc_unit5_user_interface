@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     [Header("General")] 
     [SerializeField] private int score;
     [SerializeField] private int lifes  = 0;
-    public bool isGameOver { get; private set; } = false;
+    public bool isGameOver { get; private set; } = true;
 
     [Header("Spawn")]
     [SerializeField] private List<GameObject> targets;
@@ -21,13 +21,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI lifeText;
     [SerializeField] private GameObject gameOverUI;
+    [SerializeField] private GameObject titleUI;
+    [SerializeField] private GameObject infoUI;
     
     private void Start()
     {
-        isGameOver = false;
-        UpdateLifes(3);
-        StartCoroutine(SpawnTarget());
-        UpdateScore(0);
+
     }
 
     IEnumerator SpawnTarget()
@@ -63,5 +62,16 @@ public class GameManager : MonoBehaviour
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void StartGame(int difficulty)
+    {
+        spawnRate /= difficulty;
+        titleUI.SetActive(false);
+        infoUI.SetActive(true);
+        isGameOver = false;
+        UpdateLifes(3);
+        StartCoroutine(SpawnTarget());
+        UpdateScore(0);
     }
 }
