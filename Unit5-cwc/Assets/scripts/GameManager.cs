@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
 
     [Header("General")] 
     [SerializeField] private int score;
-    [SerializeField] private bool isGameOver = false;
+    [SerializeField] private int lifes  = 0;
+    public bool isGameOver { get; private set; } = false;
 
     [Header("Spawn")]
     [SerializeField] private List<GameObject> targets;
@@ -17,9 +19,13 @@ public class GameManager : MonoBehaviour
 
     [Header("References")] 
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI lifeText;
+    [SerializeField] private GameObject gameOverUI;
     
     private void Start()
     {
+        isGameOver = false;
+        UpdateLifes(3);
         StartCoroutine(SpawnTarget());
         UpdateScore(0);
     }
@@ -38,5 +44,24 @@ public class GameManager : MonoBehaviour
     {
         score += scoreAdd;
         scoreText.text = $"Score : {score}";
+    }
+
+    public void GameOver()
+    {
+        isGameOver = true;
+        gameOverUI.gameObject.SetActive(true);
+    }
+
+    public void UpdateLifes(int lifesAdd)
+    {
+        lifes += lifesAdd;
+        if(lifes <= 0)
+            GameOver();
+        lifeText.text = $"Lifes : {lifes}";
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
